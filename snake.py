@@ -25,7 +25,7 @@ snake_head = Turtle()
 snake_head.speed(0)
 snake_head.shape("square")
 snake_head.color("green")
-snake_head.shapesize(stretch_wid=0.5, stretch_len=0.5)
+snake_head.shapesize(stretch_wid=1, stretch_len=1)
 snake_head.goto(0, 0)
 snake_head.penup()
 snake_head.direction = "stop"
@@ -38,9 +38,10 @@ food = Turtle()
 food.speed(0)
 food.shape("circle")
 food.color("red")
-food.shapesize(stretch_wid=0.5, stretch_len=0.5, outline=1)
+food.shapesize(stretch_wid=1, stretch_len=1, outline=1)
 food.penup()
-food.goto(randx, randy)
+food.goto(randx-20 , randy-20)
+
 # :::::::::::::::::::::::::::::::::::::::MOVEMENT:::::::::::::::::::::::::::::::::::
 
 def up():
@@ -62,19 +63,19 @@ def right():
 def move():
     if snake_head.direction == "up":
         y = snake_head.ycor()
-        snake_head.sety(y + 10)
+        snake_head.sety(y + 20)
 
     if snake_head.direction == "down":
         y = snake_head.ycor()
-        snake_head.sety(y - 10)
+        snake_head.sety(y - 20)
 
     if snake_head.direction == "left":
         x = snake_head.xcor()
-        snake_head.setx(x - 10)
+        snake_head.setx(x - 20)
 
     if snake_head.direction == "right":
         x = snake_head.xcor()
-        snake_head.setx(x + 10)
+        snake_head.setx(x + 20)
  
 window.listen()
 
@@ -84,26 +85,32 @@ window.onkeypress(right, "Right")
 window.onkeypress(left,"Left")
 
 # :::::::::::::::::::::::::::::::::::::::MAIN:::::::::::::::::::::::::::::::::::::::
+
 while True:
     randx = randint(-winsizex//2, winsizex//2)
     randy = randint(-winsizey//2, winsizey//2)
     window.update()
-    if snake_head.xcor()>winsizex or snake_head.xcor()<-winsizex or snake_head.ycor()>winsizey or snake_head.ycor()<-winsizey:
+
+    if snake_head.xcor()>winsizex//2 or snake_head.xcor()<-winsizex//2 or snake_head.ycor()>winsizey//2 or snake_head.ycor()<-winsizey//2:
+        print("Deine Punktzahl ist:", score)
         exit()
-    if snake_head.distance(food) < 10:
-        food.goto(randx, randy)
+    if snake_head.distance(food) < 20:
+        food.goto(randx-20, randy-20)
         score += 1
+
         #::::::::::Segment::::::::::
+
         new_segment = Turtle()
         new_segment.speed(0)
         new_segment.shape("square")
         new_segment.color("white")
-        new_segment.shapesize(stretch_wid=0.5, stretch_len=0.5)
+        new_segment.shapesize(stretch_wid=1, stretch_len=1)
         new_segment.penup()
         segments.append(new_segment)
 
         delay -= 0.001
-        
+
+
     for i in range(len(segments)-1, 0, -1):
         x = segments[i-1].xcor()
         y = segments[i-1].ycor()
@@ -115,4 +122,13 @@ while True:
         segments[0].goto(x, y)
 
     move()
+
+    #::::::::::Game Over::::::::::
+
+    for new_segment in segments:
+        if new_segment.distance(snake_head) < 20:
+            print("Deine Punktzahl ist:", score)
+            exit()
+            
+
     sleep(delay)
